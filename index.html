@@ -135,11 +135,12 @@
         }
 
         .expired {
-            font-size: clamp(2rem, 8vw, 4rem);
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             font-weight: bold;
-            color: white;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
             animation: expiredPulse 1.5s ease-in-out infinite;
+            line-height: 1.6;
         }
 
         @keyframes expiredPulse {
@@ -248,7 +249,7 @@
             const distance = countdownDate - now;
 
             if (distance < 0) {
-                countdownElement.innerHTML = '<div class="expired">🎉 時間終了! 🎉</div>';
+                countdownElement.innerHTML = '<div class="expired">戒厳令を宣言します。<br>この時間より接近禁止プロトコルを完全に解除します</div>';
                 return;
             }
 
