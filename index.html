@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>カウントダウン | 解禁まで後</title>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #f5d0e6 0%, #8ec5fc 70%, #e0c3fc 100%);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Segoe UI', 'Noto Sans JP', Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .fancy-title {
+      font-size: 3rem;
+      font-weight: bold;
+      letter-spacing: .2rem;
+      background: linear-gradient(90deg, #f857a6, #ff5858, #ffc837, #43e97b, #38f9d7, #a5dee5, #f857a6);
+      background-size: 200% 200%;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: rainbowGlow 3s linear infinite;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 18px #fff7, 0 0 34px #f857a6cc;
+    }
+    @keyframes rainbowGlow {
+      0% { background-position: 0% 100%; }
+      50% { background-position: 100% 0%; }
+      100% { background-position: 0% 100%; }
+    }
+    .countdown {
+      font-size: 2.7rem;
+      padding: 1rem 1.5rem;
+      background: rgba(255,255,255,0.22);
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 60px -8px #8887;
+      font-family: 'Montserrat', 'Noto Sans JP', Arial, sans-serif;
+      margin-bottom: 1rem;
+    }
+    .finished {
+      font-size: 2.7rem;
+      color: #f857a6;
+      font-weight: bold;
+      text-shadow: 0 0 30px #fff7, 0 0 18px #f857a6cc;
+      letter-spacing: .2rem;
+      margin-bottom: 1rem;
+      animation: finishedGlow .8s alternate infinite;
+    }
+    @keyframes finishedGlow {
+      0% { text-shadow: 0 0 40px #ff1764bb, 0 0 8px #fff7; }
+      100% { text-shadow: 0 0 70px #ffc837, 0 0 32px #fff7; }
+    }
+  </style>
+</head>
+<body>
+  <div class="fancy-title">解禁まで後</div>
+  <div id="countdown" class="countdown"></div>
+  <script>
+    // 오늘 날짜 가져오기(UTC 기준)
+    function getTodayCountdownDeadline() {
+      const now = new Date();
+      // 오늘 자정까지(24:00, 즉 내일 00:00이 되기 1초 전까지)
+      const deadline = new Date();
+      deadline.setHours(24,0,0,0); // 24:00:00 (실제로는 내일 0:00)
+      return deadline;
+    }
+    function format(num) {
+      return ('0' + num).slice(-2);
+    }
+    function updateCountdown() {
+      const countdownEl = document.getElementById('countdown');
+      const now = new Date();
+      const deadline = getTodayCountdownDeadline();
+      const diff = deadline - now;
+      if (diff > 0) {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        countdownEl.className = "countdown";
+        countdownEl.textContent = `${format(hours)}時間 ${format(minutes)}分 ${format(seconds)}秒`;
+      } else {
+        countdownEl.className = "finished";
+        countdownEl.textContent = "解禁しました！";
+      }
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
