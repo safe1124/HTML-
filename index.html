@@ -198,6 +198,56 @@
                 margin-top: 5px;
             }
         }
+
+        /* 이미지 스타일 */
+        .secret-image {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            filter: blur(30px);
+            transition: filter 2s ease-in-out;
+        }
+
+        .secret-image.revealed {
+            filter: blur(0);
+        }
+
+        .image-container {
+            margin-top: 30px;
+            position: relative;
+        }
+
+        .reveal-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: bold;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            text-align: center;
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 2s ease-in-out;
+        }
+
+        .reveal-message.hidden {
+            opacity: 0;
+        }
+
+        @media (max-width: 480px) {
+            .secret-image {
+                margin-top: 20px;
+                border-radius: 15px;
+            }
+
+            .image-container {
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -205,10 +255,17 @@
         <h1>⏰ 카운트다운</h1>
         <div id="countdown" class="countdown-container"></div>
         <div class="message">11월 18일 자정까지</div>
+
+        <div class="image-container">
+            <img src="https://i.ibb.co/JRQFB9mc/IMG-9505.png" alt="Secret Image" class="secret-image" id="secretImage">
+            <div class="reveal-message" id="revealMessage">🔒 곧 공개됩니다...</div>
+        </div>
     </div>
 
     <script>
         const countdownElement = document.getElementById('countdown');
+        const secretImage = document.getElementById('secretImage');
+        const revealMessage = document.getElementById('revealMessage');
         const countdownDate = new Date('2025-11-18T00:00:00').getTime();
 
         const updateCountdown = () => {
@@ -216,7 +273,16 @@
             const distance = countdownDate - now;
 
             if (distance < 0) {
-                countdownElement.innerHTML = '<div class="expired">🎉 시간 종료! 🎉</div>';
+                // 카운트다운 종료 시
+                countdownElement.innerHTML = '<div class="expired">接近禁止命令解除！！！<br>宴の時間だ</div>';
+
+                // 이미지 블러 해제
+                secretImage.classList.add('revealed');
+
+                // 잠금 메시지 숨기기
+                revealMessage.classList.add('hidden');
+
+                clearInterval(interval);
                 return;
             }
 
