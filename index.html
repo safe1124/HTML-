@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>카운트다운 타이머</title>
+    <title>カウントダウンタイマー</title>
     <style>
         * {
             margin: 0;
@@ -135,11 +135,12 @@
         }
 
         .expired {
-            font-size: clamp(2rem, 8vw, 4rem);
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             font-weight: bold;
-            color: white;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            color: #ff0000;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
             animation: expiredPulse 1.5s ease-in-out infinite;
+            line-height: 1.6;
         }
 
         @keyframes expiredPulse {
@@ -202,22 +203,58 @@
 </head>
 <body>
     <div class="container">
-        <h1>⏰ 카운트다운</h1>
+        <h1>⏰ カウントダウン</h1>
         <div id="countdown" class="countdown-container"></div>
-        <div class="message">11월 18일 자정까지</div>
+        <div class="message">11月18日午前0時まで</div>
     </div>
 
     <script>
         const countdownElement = document.getElementById('countdown');
         const countdownDate = new Date('2025-11-18T00:00:00').getTime();
 
+        // 초기 HTML 구조 생성 (한 번만)
+        let isInitialized = false;
+        let daysElement, hoursElement, minutesElement, secondsElement;
+
+        const initializeCountdown = () => {
+            countdownElement.innerHTML = `
+                <div class="time-box">
+                    <span class="time-value" id="days">00</span>
+                    <span class="time-label">日</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-value" id="hours">00</span>
+                    <span class="time-label">時間</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-value" id="minutes">00</span>
+                    <span class="time-label">分</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-value" id="seconds">00</span>
+                    <span class="time-label">秒</span>
+                </div>
+            `;
+
+            // 요소 참조 저장
+            daysElement = document.getElementById('days');
+            hoursElement = document.getElementById('hours');
+            minutesElement = document.getElementById('minutes');
+            secondsElement = document.getElementById('seconds');
+            isInitialized = true;
+        };
+
         const updateCountdown = () => {
             const now = new Date().getTime();
             const distance = countdownDate - now;
 
             if (distance < 0) {
-                countdownElement.innerHTML = '<div class="expired">🎉 시간 종료! 🎉</div>';
+                countdownElement.innerHTML = '<div class="expired">戒厳令を宣言します。<br>この時間より接近禁止プロトコルを完全に解除します</div>';
                 return;
+            }
+
+            if (!isInitialized) {
+                initializeCountdown();
             }
 
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -225,28 +262,15 @@
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            countdownElement.innerHTML = `
-                <div class="time-box">
-                    <span class="time-value">${String(days).padStart(2, '0')}</span>
-                    <span class="time-label">일</span>
-                </div>
-                <div class="time-box">
-                    <span class="time-value">${String(hours).padStart(2, '0')}</span>
-                    <span class="time-label">시간</span>
-                </div>
-                <div class="time-box">
-                    <span class="time-value">${String(minutes).padStart(2, '0')}</span>
-                    <span class="time-label">분</span>
-                </div>
-                <div class="time-box">
-                    <span class="time-value">${String(seconds).padStart(2, '0')}</span>
-                    <span class="time-label">초</span>
-                </div>
-            `;
+            // 값만 업데이트 (DOM 재생성 없음)
+            daysElement.textContent = String(days).padStart(2, '0');
+            hoursElement.textContent = String(hours).padStart(2, '0');
+            minutesElement.textContent = String(minutes).padStart(2, '0');
+            secondsElement.textContent = String(seconds).padStart(2, '0');
         };
 
+        updateCountdown(); // 초기 호출
         const interval = setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call to update immediately
     </script>
 </body>
 </html>
